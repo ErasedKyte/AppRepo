@@ -1,7 +1,8 @@
 import React from "react";
 
 const Home = () => {
-  return <div>Hello World!</div>;
+  let ali :String = "klasdfjl"
+  return <div>Hello Wossrld!</div>;
 };
 
 export default Home;
