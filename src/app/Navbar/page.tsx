@@ -53,13 +53,13 @@ const Navbar: React.FC = () => {
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <h1 className="text-white text-xl font-bold">Your Logo</h1>
+              <h1 className="text-white text-xl font-bold">RAN Dev</h1>
             </div>
             {/* Navigation links */}
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">
                 <a
-                  href="#"
+                  href="/homepage"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Home

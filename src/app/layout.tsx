@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google'; // Adjust import path as per your project
 import './globals.css';
 import React from 'react';
+import Navbar from './Navbar/page';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -14,9 +15,13 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
+
   return (
+    
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      
+      <body className={inter.className}><Navbar/>{children}</body>
     </html>
+   
   );
 }
