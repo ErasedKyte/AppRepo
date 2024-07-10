@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "types": ["next", "tailwindcss"], // Add "tailwindcss" to the "types" array
+    "typeRoots": ["./node_modules/@types", "./types"],  
     "target": "esnext",
     "module": "commonjs",
     "strict": true,
@@ -30,6 +32,7 @@
       }
     ]
   },
+  
   "exclude": [
     "node_modules",
     "next.config.js",
@@ -41,4 +44,5 @@
     "**/*.ts",
     "**/*.tsx"
   ]
+  
 }
