@@ -65,10 +65,10 @@ const Navbar: React.FC = () => {
                   Home
                 </a>
                 <a
-                  href="#"
+                  href="/process"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  Services
+                Process 
                 </a>
                 <a
                   href="#"
@@ -99,20 +99,9 @@ const Navbar: React.FC = () => {
             {/* Profile dropdown */}
             <div className="ml-3 relative">
               <div>
-                <button
-                  type="button"
-                  className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:shadow-solid"
-                  id="user-menu"
-                  aria-label="User menu"
-                  aria-haspopup="true"
-                >
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="https://avatars.githubusercontent.com/u/6209657?v=4"
-                    alt="User avatar"
-                  />
-                </button>
+                  <h1 className='text-white	'>Welcome!</h1>
+                
               </div>
             </div>
           </div>
