@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'; // Adjust import path as per your project
 import './globals.css';
 import React from 'react';
-import Navbar from './Navbar/page';
+import Navbar from './Navbar/navbar';
 
 interface RootLayoutProps {
   children: React.ReactNode;
