@@ -10,7 +10,7 @@ interface RootLayoutProps {
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Next App',
+  title: 'Projects',
   description: 'Next.js starter app',
 };
 
