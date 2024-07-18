@@ -6,8 +6,13 @@ const AcquisitionPage: React.FC = () => {
   return (
     <div>
       <h1>Acquisition Page</h1>
-      <FileUpload />
-      <FileList />
+      <form>
+        <input 
+        name = "Docs" 
+        id = "Docs"
+        type="text" 
+        />
+      </form>
     </div>
   );
 };

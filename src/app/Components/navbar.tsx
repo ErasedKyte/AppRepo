@@ -59,19 +59,19 @@ const Navbar: React.FC = () => {
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">
                 <a
-                  href="/pages/home"
+                  href="/"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Home
                 </a>
                 <a
-                  href="#"
+                  href="/About"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   About
                 </a>
                 <a
-                  href="#"
+                  href="/Contact"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Contact

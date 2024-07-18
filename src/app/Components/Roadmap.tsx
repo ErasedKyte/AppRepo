@@ -32,22 +32,22 @@ const Roadmap = ({ activeStep }) => {
   const handleStepClick = (index) => {
     switch(index) {
       case 0:
-        router.push('./Acquisition');
+        router.push('./pages/Acquisition');
         break;
       case 1:
-        router.push('./Approval');
+        router.push('./pages/Approval');
         break;
       case 2:
-        router.push('/Civil');
+        router.push('/pages/Civil');
         break;
       case 3:
-        router.push('/TI');
+        router.push('/pages/TI');
         break;
       case 4:
-        router.push('/OnAir');
+        router.push('/pages/OnAir');
         break;
       case 5:
-        router.push('/Handover');
+        router.push('/pages/Handover');
         break;
       default:
         router.push('/');
