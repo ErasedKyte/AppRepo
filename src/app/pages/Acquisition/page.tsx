@@ -1,20 +1,31 @@
 import React from 'react';
-import FileUpload from '../../Components/FileUpload';
-import FileList from '../../Components/FileList';
+import { db } from '../../db';
+import { redirect } from 'next/navigation';
 
-const AcquisitionPage: React.FC = () => {
+export default function AcquisitionPage() {
+  async function CreateAcq(formData: FormData) {
+    'use server';
+    const Docs = formData.get('Docs') as string;
+    const snippet = await db.documents.create({
+      data: {
+        Docs,
+      },
+    });
+    console.log(snippet)
+    redirect('/');
+  }
+
   return (
     <div>
       <h1>Acquisition Page</h1>
-      <form>
+      <form action={CreateAcq}>
         <input 
-        name = "Docs" 
-        id = "Docs"
-        type="text" 
+          name="Docs" 
+          id="Docs" 
+          type="text" 
         />
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
-};
-
-export default AcquisitionPage;
+}

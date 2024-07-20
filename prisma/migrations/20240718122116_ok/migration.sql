@@ -1,5 +1,0 @@
--- CreateTable
-CREATE TABLE "Documents" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "Docs" TEXT NOT NULL
-);
