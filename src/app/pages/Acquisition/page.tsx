@@ -2,6 +2,7 @@
 import React from 'react';
 import { db } from '../../db';
 import FileUploadForm from '../../Components/FileUploadForm';
+import Link from 'next/link';
 
 // This is a server-side component
 export default async function AcquisitionPage() {
@@ -9,9 +10,10 @@ export default async function AcquisitionPage() {
 
   const rendered = snippets.map((documents) => {
     return (
-      <div key={documents.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+      <Link key={documents.id} href={`/documents/${documents.id}`} className="p-4 border border-gray-300 rounded-lg shadow-sm" >
         {documents.Docs}
-      </div>
+        <div>View</div>
+      </Link>
     );
   });
 
