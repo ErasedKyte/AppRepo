@@ -1,31 +1,27 @@
+// src/app/acquisition/page.tsx
 import React from 'react';
 import { db } from '../../db';
-import { redirect } from 'next/navigation';
+import FileUploadForm from '../../Components/FileUploadForm';
 
-export default function AcquisitionPage() {
-  async function CreateAcq(formData: FormData) {
-    'use server';
-    const Docs = formData.get('Docs') as string;
-    const snippet = await db.documents.create({
-      data: {
-        Docs,
-      },
-    });
-    console.log(snippet)
-    redirect('/');
-  }
+// This is a server-side component
+export default async function AcquisitionPage() {
+  const snippets = await db.documents.findMany();
+
+  const rendered = snippets.map((documents) => {
+    return (
+      <div key={documents.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+        {documents.Docs}
+      </div>
+    );
+  });
 
   return (
-    <div>
-      <h1>Acquisition Page</h1>
-      <form action={CreateAcq}>
-        <input 
-          name="Docs" 
-          id="Docs" 
-          type="text" 
-        />
-        <button type="submit">Submit</button>
-      </form>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Acquisition Page</h1>
+      <FileUploadForm />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {rendered}
+      </div>
     </div>
   );
 }

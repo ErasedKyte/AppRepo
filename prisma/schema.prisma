@@ -10,11 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<<< Updated upstream
-model Documents{
-=======
 model documents{
->>>>>>> Stashed changes
   id Int @id @default(autoincrement())
   Docs String
 }
