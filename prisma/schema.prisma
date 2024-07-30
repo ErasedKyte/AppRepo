@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// src/prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +9,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model documents{
-  id Int @id @default(autoincrement())
-  Docs String
+model SarfForm {
+  id                      Int        @id @default(autoincrement())
+  submittedAt             DateTime   @default(now())
+  status                  String     @default("pending")
+  ProjectName             String
+  NominalSiteId           String
+  NominalSiteName         String
+  RoadName                String
+  BlockNumber             Int
+  Longitude               Float
+  Latitude                Float
+  SearchRadius            Int
+  CellType                String
+  NoOfAntenna1            Int
+  AntennaSize1            String
+  RequiredAntennaHeight1  Int
+  AntennaAzimuth1         Float
+  NoOfAntenna2            Int
+  AntennaSize2            String
+  RequiredAntennaHeight2  Int
+  AntennaAzimuth2         Float
+  NoOfAntenna3            Int
+  AntennaSize3            String
+  RequiredAntennaHeight3  Int
+  AntennaAzimuth3         Float
+  NoOfAntenna4            Int?
+  AntennaSize4            String?
+  RequiredAntennaHeight4  Int?
+  AntennaAzimuth4         Float?
 }
