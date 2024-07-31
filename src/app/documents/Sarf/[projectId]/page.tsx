@@ -1,55 +1,73 @@
-// src/app/pages/SarfFormCreatePage.tsx
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { db } from '../../db';
+// src/app/documents/Sarf/[projectId]/page.tsx
+'use client';
 
-export default function SarfFormCreatePage() {
-  async function createSarfForm(formData: FormData) {
-    'use server';
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { db } from '../../../db'; // Adjust the path according to your project structure
 
-    // Map form data to the shape required by your database
+// Rest of your code
+
+const SarfFormPage = () => {
+  const pathname = usePathname();
+  const projectId = pathname.split('/').pop(); // Extract project ID from URL
+  const [project, setProject] = useState<any>(null);
+
+  useEffect(() => {
+    if (projectId) {
+      const fetchProject = async () => {
+        const fetchedProject = await db.sarfForm.findUnique({ where: { id: Number(projectId) } }); // Adjust this query to match your database schema
+        setProject(fetchedProject);
+      };
+
+      fetchProject();
+    }
+  }, [projectId]);
+
+  if (!project) {
+    return <div>Loading...</div>;
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
     const data = {
       ProjectName: formData.get('ProjectName') as string,
       NominalSiteId: formData.get('NominalSiteId') as string,
       NominalSiteName: formData.get('NominalSiteName') as string,
       RoadName: formData.get('RoadName') as string,
-      BlockNumber: Number(formData.get('BlockNumber')) || 0,
-      Longitude: Number(formData.get('Longitude')) || 0,
-      Latitude: Number(formData.get('Latitude')) || 0,
-      SearchRadius: Number(formData.get('SearchRadius')) || 0,
+      BlockNumber: Number(formData.get('BlockNumber')),
+      Longitude: Number(formData.get('Longitude')),
+      Latitude: Number(formData.get('Latitude')),
+      SearchRadius: Number(formData.get('SearchRadius')),
       CellType: formData.get('CellType') as string,
-      NoOfAntenna1: Number(formData.get('NoOfAntenna1')) || 0,
+      NoOfAntenna1: Number(formData.get('NoOfAntenna1')),
       AntennaSize1: formData.get('AntennaSize1') as string,
-      RequiredAntennaHeight1: Number(formData.get('RequiredAntennaHeight1')) || 0,
-      AntennaAzimuth1: Number(formData.get('AntennaAzimuth1')) || 0,
-      NoOfAntenna2: Number(formData.get('NoOfAntenna2')) || 0,
+      RequiredAntennaHeight1: Number(formData.get('RequiredAntennaHeight1')),
+      AntennaAzimuth1: Number(formData.get('AntennaAzimuth1')),
+      NoOfAntenna2: Number(formData.get('NoOfAntenna2')),
       AntennaSize2: formData.get('AntennaSize2') as string,
-      RequiredAntennaHeight2: Number(formData.get('RequiredAntennaHeight2')) || 0,
-      AntennaAzimuth2: Number(formData.get('AntennaAzimuth2')) || 0,
-      NoOfAntenna3: Number(formData.get('NoOfAntenna3')) || 0,
+      RequiredAntennaHeight2: Number(formData.get('RequiredAntennaHeight2')),
+      AntennaAzimuth2: Number(formData.get('AntennaAzimuth2')),
+      NoOfAntenna3: Number(formData.get('NoOfAntenna3')),
       AntennaSize3: formData.get('AntennaSize3') as string,
-      RequiredAntennaHeight3: Number(formData.get('RequiredAntennaHeight3')) || 0,
-      AntennaAzimuth3: Number(formData.get('AntennaAzimuth3')) || 0,
-      NoOfAntenna4: Number(formData.get('NoOfAntenna4')) || 0,
+      RequiredAntennaHeight3: Number(formData.get('RequiredAntennaHeight3')),
+      AntennaAzimuth3: Number(formData.get('AntennaAzimuth3')),
+      NoOfAntenna4: Number(formData.get('NoOfAntenna4')),
       AntennaSize4: formData.get('AntennaSize4') as string,
-      RequiredAntennaHeight4: Number(formData.get('RequiredAntennaHeight4')) || 0,
-      AntennaAzimuth4: Number(formData.get('AntennaAzimuth4')) || 0,
+      RequiredAntennaHeight4: Number(formData.get('RequiredAntennaHeight4')),
+      AntennaAzimuth4: Number(formData.get('AntennaAzimuth4')),
     };
 
-    // Create a new SARF form entry in the database
-    await db.sarfForm.create({
-      data,
-    });
-
-    // Redirect to the main page after successful submission
-    redirect('/');
-  }
+    await db.sarfForm.create({ data });
+    window.location.href = '/'; // Redirect to the main page after submission
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
       <h3 className="font-bold text-xl mb-6 text-center">Create a SARF Form</h3>
-      <form action={createSarfForm} method="POST" className="space-y-4">
-        {/* Project Name */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form fields */}
         <div className="border p-4 rounded-lg">
           <h2 className="font-bold mb-2">Project Name</h2>
           <div>
@@ -59,11 +77,11 @@ export default function SarfFormCreatePage() {
               name="ProjectName"
               id="ProjectName"
               className="w-full border rounded p-2"
+              defaultValue={project.name}
             />
           </div>
         </div>
 
-        {/* Section 1: Site Details */}
         <div className="border p-4 rounded-lg">
           <h2 className="font-bold mb-2">Section 1: Site Details - (Completed by Radio Network Planning)</h2>
           <div className="grid grid-cols-2 gap-4">
@@ -106,7 +124,6 @@ export default function SarfFormCreatePage() {
           </div>
         </div>
 
-        {/* Section 2: Nominal Position */}
         <div className="border p-4 rounded-lg">
           <h2 className="font-bold mb-2">Section 2: Nominal Position (Completed by Radio Network Planning)</h2>
           <div className="grid grid-cols-2 gap-4">
@@ -149,7 +166,6 @@ export default function SarfFormCreatePage() {
           </div>
         </div>
 
-        {/* Antenna Details Table */}
         <div className="border p-4 rounded-lg">
           <h2 className="font-bold mb-2">Antenna Details</h2>
           <table className="min-w-full border">
@@ -163,9 +179,9 @@ export default function SarfFormCreatePage() {
               </tr>
             </thead>
             <tbody>
-              {['NoOfAntenna', 'AntennaSize', 'RequiredAntennaHeight', 'AntennaAzimuth'].map((detail, index) => (
+              {['NoOfAntenna', 'AntennaSize', 'RequiredAntennaHeight', 'AntennaAzimuth'].map((detail) => (
                 <tr key={detail}>
-                  <td className="border p-2">{detail.replace(/([A-Z])/g, ' $1').trim()}</td>
+                  <td className="border p-2">{detail}</td>
                   {[1, 2, 3, 4].map((sector) => (
                     <td key={sector} className="border p-2">
                       <input
@@ -182,7 +198,6 @@ export default function SarfFormCreatePage() {
           </table>
         </div>
 
-        {/* Submit Button */}
         <div className="text-right">
           <button
             type="submit"
@@ -194,4 +209,6 @@ export default function SarfFormCreatePage() {
       </form>
     </div>
   );
-}
+};
+
+export default SarfFormPage;

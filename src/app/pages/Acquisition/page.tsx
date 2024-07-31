@@ -1,12 +1,16 @@
+// src/pages/acquisition/page.tsx
+
 import React from 'react';
-import { db } from '../../db';
+import { db } from '../../db'; // Adjust the import path if needed
 import Link from 'next/link';
 import { Button } from '@mui/material';
 
 // This is a server-side component
 export default async function AcquisitionPage() {
+  // Fetch data from the database
   const snippets = await db.sarfForm.findMany();
 
+  // Render the SARF forms
   const rendered = snippets.map((sarfForm) => {
     // Determine the status color class based on the status value
     const statusColorClass = sarfForm.status === 'approved' ? 'text-green-500' : 'text-orange-500';
@@ -17,7 +21,7 @@ export default async function AcquisitionPage() {
     return (
       <Link 
         key={sarfForm.id} 
-        href={`/documents/${sarfForm.id}`} 
+        href={`/documents/${sarfForm.id}`}
         className="p-4 border border-gray-300 rounded-lg shadow-sm flex justify-between items-center"
       >
         <div>
