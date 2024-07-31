@@ -1,10 +1,8 @@
 -- CreateTable
 CREATE TABLE "SarfForm" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "submittedBy" INTEGER NOT NULL,
     "submittedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "departmentId" INTEGER NOT NULL,
     "ProjectName" TEXT NOT NULL,
     "NominalSiteId" TEXT NOT NULL,
     "NominalSiteName" TEXT NOT NULL,
@@ -26,27 +24,8 @@ CREATE TABLE "SarfForm" (
     "AntennaSize3" TEXT NOT NULL,
     "RequiredAntennaHeight3" INTEGER NOT NULL,
     "AntennaAzimuth3" REAL NOT NULL,
-    CONSTRAINT "SarfForm_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "SarfForm_submittedBy_fkey" FOREIGN KEY ("submittedBy") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "NoOfAntenna4" INTEGER,
+    "AntennaSize4" TEXT,
+    "RequiredAntennaHeight4" INTEGER,
+    "AntennaAzimuth4" REAL
 );
-
--- CreateTable
-CREATE TABLE "Department" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "departmentId" INTEGER,
-    CONSTRAINT "User_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "Department_name_key" ON "Department"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
