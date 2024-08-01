@@ -9,57 +9,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Define the Project model
 model Project {
-  id             Int       @id @default(autoincrement())
-  name           String
-  sarfForm       SarfForm  @relation(fields: [sarfFormId], references: [id])
-  sarfFormId     Int      @unique
-  survey         Survey    @relation(fields: [surveyId], references: [id])
-  surveyId       Int      @unique
-  sfa            SFA       @relation(fields: [sfaId], references: [id])
-  sfaId          Int      @unique
+  id        Int       @id @default(autoincrement())
+  name      String
+  sarfForms SarfForm? @relation("ProjectSarfForm") // Define the relation here
 }
 
-// SARF form model
 model SarfForm {
-  id                      Int        @id @default(autoincrement())
-  status                  String     @default("pending")
-  ProjectName             String
-  NominalSiteId           String
-  NominalSiteName         String
-  RoadName                String
-  BlockNumber             Int
-  Longitude               Float
-  Latitude                Float
-  SearchRadius            Int
-  CellType                String
-  NoOfAntenna1            Int
-  AntennaSize1            String
-  RequiredAntennaHeight1  Int
-  AntennaAzimuth1         Float
-  NoOfAntenna2            Int
-  AntennaSize2            String
-  RequiredAntennaHeight2  Int
-  AntennaAzimuth2         Float
-  NoOfAntenna3            Int
-  AntennaSize3            String
-  RequiredAntennaHeight3  Int
-  AntennaAzimuth3         Float
-  NoOfAntenna4            Int?
-  AntennaSize4            String?
-  RequiredAntennaHeight4  Int?
-  AntennaAzimuth4         Float?
-}
-
-// Survey form model
-model Survey {
-  id        Int      @id @default(autoincrement())
-  // Add specific fields for Survey form here
-}
-
-// SFA form model
-model SFA {
-  id        Int      @id @default(autoincrement())
-  // Add specific fields for SFA form here
+  id                     Int      @id @default(autoincrement())
+  projectId              Int      @unique
+  project                Project  @relation("ProjectSarfForm", fields: [projectId], references: [id]) // Define the relation with fields and references here
+  submittedAt            DateTime @default(now())
+  status                 String   @default("pending")
+  ProjectName            String
+  NominalSiteId          String
+  NominalSiteName        String
+  RoadName               String
+  BlockNumber            Int
+  Longitude              Float
+  Latitude               Float
+  SearchRadius           Int
+  CellType               String
+  NoOfAntenna1           Int
+  AntennaSize1           String
+  RequiredAntennaHeight1 Int
+  AntennaAzimuth1        Float
+  NoOfAntenna2           Int
+  AntennaSize2           String
+  RequiredAntennaHeight2 Int
+  AntennaAzimuth2        Float
+  NoOfAntenna3           Int
+  AntennaSize3           String
+  RequiredAntennaHeight3 Int
+  AntennaAzimuth3        Float
+  NoOfAntenna4           Int?
+  AntennaSize4           String?
+  RequiredAntennaHeight4 Int?
+  AntennaAzimuth4        Float?
 }

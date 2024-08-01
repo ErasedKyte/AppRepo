@@ -21,7 +21,7 @@ export default async function AcquisitionPage() {
     return (
       <Link 
         key={sarfForm.id} 
-        href={`/documents/${sarfForm.id}`}
+        href={`/project/${sarfForm.id}`}
         className="p-4 border border-gray-300 rounded-lg shadow-sm flex justify-between items-center"
       >
         <div>
@@ -36,7 +36,7 @@ export default async function AcquisitionPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Acquisition Page</h1>
-      <Link href={'/documents/create'}>
+      <Link href={'/project/create'}>
         <Button variant="contained" color="primary">Start New Acquisition +</Button>
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">

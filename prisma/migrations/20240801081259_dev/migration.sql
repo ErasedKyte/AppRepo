@@ -1,6 +1,13 @@
 -- CreateTable
+CREATE TABLE "Project" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "SarfForm" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "projectId" INTEGER NOT NULL,
     "submittedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "ProjectName" TEXT NOT NULL,
@@ -27,5 +34,9 @@ CREATE TABLE "SarfForm" (
     "NoOfAntenna4" INTEGER,
     "AntennaSize4" TEXT,
     "RequiredAntennaHeight4" INTEGER,
-    "AntennaAzimuth4" REAL
+    "AntennaAzimuth4" REAL,
+    CONSTRAINT "SarfForm_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SarfForm_projectId_key" ON "SarfForm"("projectId");
