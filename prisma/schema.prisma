@@ -1,5 +1,3 @@
-// src/prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,13 +10,14 @@ datasource db {
 model Project {
   id        Int       @id @default(autoincrement())
   name      String
-  sarfForms SarfForm? @relation("ProjectSarfForm") // Define the relation here
+  sarfForms SarfForm? @relation("ProjectSarfForm")
+  survey    Survey?   @relation("ProjectSurvey")
 }
 
 model SarfForm {
   id                     Int      @id @default(autoincrement())
   projectId              Int      @unique
-  project                Project  @relation("ProjectSarfForm", fields: [projectId], references: [id]) // Define the relation with fields and references here
+  project                Project  @relation("ProjectSarfForm", fields: [projectId], references: [id])
   submittedAt            DateTime @default(now())
   status                 String   @default("pending")
   ProjectName            String
@@ -46,4 +45,31 @@ model SarfForm {
   AntennaSize4           String?
   RequiredAntennaHeight4 Int?
   AntennaAzimuth4        Float?
+}
+
+model Survey {
+  id                  Int     @id @default(autoincrement())
+  projectId           Int     @unique
+  project             Project @relation("ProjectSurvey", fields: [projectId], references: [id])
+  latLonOpt1          String
+  buildingPlotOpt1    String
+  gateOpt1            String
+  roadOpt1            String
+  blockOpt1           String
+  areaOpt1            String
+  latLonOpt2          String
+  buildingPlotOpt2    String
+  gateOpt2            String
+  roadOpt2            String
+  blockOpt2           String
+  areaOpt2            String
+  latLonOpt3          String
+  buildingPlotOpt3    String
+  gateOpt3            String
+  roadOpt3            String
+  blockOpt3           String
+  areaOpt3            String
+  contactName         String
+  contactTel          String
+  procurementComments String
 }

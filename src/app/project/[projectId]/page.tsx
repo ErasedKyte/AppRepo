@@ -27,6 +27,7 @@ export default async function DocumentShowPage({ params }: DocumentShowPageProps
     return notFound();
   }
 
+    
   return (
         <><a href={`/pages/Acquisition`}>
       <button className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600">

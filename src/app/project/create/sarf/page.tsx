@@ -1,6 +1,6 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { db } from '../../db'; // Ensure this path is correct
+import { db } from '../../../db'; // Ensure this path is correct
 
 export default function SarfFormCreatePage() {
   async function createSarfForm(formData: FormData) {
