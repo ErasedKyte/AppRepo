@@ -26,6 +26,7 @@ export default async function AcquisitionPage() {
       >
         <div>
           <div className="font-semibold">{sarfForm.ProjectName}</div>
+          <p className="text-gray-500 font-medium">{sarfForm.NominalSiteId}</p>
           <div className={`text-sm ${statusColorClass}`}>Status: {displayStatus}</div>
         </div>
         <div className="text-blue-500">View</div>
