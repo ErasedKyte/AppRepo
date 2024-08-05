@@ -19,7 +19,11 @@ export default async function DocumentShowPage({ params }: DocumentShowPageProps
   // Fetch the project by ID
   const project = await db.project.findUnique({
     where: { id: projectId },
-    select: { name: true },
+    select: { name: true}, // Ensure NominalSiteName is fetched
+  });
+  const Sarf = await db.sarfForm.findUnique({
+    where: { id: projectId },
+    select: { NominalSiteName: true, NominalSiteId: true }, // Ensure NominalSiteName is fetched
   });
 
   // If no Project is found, return a 404 page
@@ -43,7 +47,10 @@ export default async function DocumentShowPage({ params }: DocumentShowPageProps
             </button>
           </a>
         </div>
-        <p className="text-lg font-medium text-gray-700 mb-8">Project Name: {project.name}</p>
+        <p className="text-lg font-medium text-gray-700">Project Name: {project.name}</p>
+        <p className="text-lg font-medium text-gray-700">Nominal Site Name: {Sarf?.NominalSiteName}</p>
+        <p className="text-lg font-medium text-gray-700 mb-8">Nominal Site ID: {Sarf?.NominalSiteId}</p>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <a
             href={`/project/${projectId}/sarfForm/${projectId}`}

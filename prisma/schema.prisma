@@ -12,6 +12,7 @@ model Project {
   name      String
   sarfForms SarfForm? @relation("ProjectSarfForm")
   survey    Survey?   @relation("ProjectSurvey")
+  sfaForms  SFAForm?  @relation("ProjectSFAForm")
 }
 
 model SarfForm {
@@ -72,4 +73,47 @@ model Survey {
   contactName         String
   contactTel          String
   procurementComments String
+}
+
+model SFAForm {
+  id                   Int      @id @default(autoincrement())
+  projectId            Int      @unique
+  project              Project  @relation("ProjectSFAForm", fields: [projectId], references: [id])
+  siteOwnerContact     String
+  siteId               String
+  siteName             String
+  optionNo             String
+  siteLocation         String
+  siteType             String
+  traZone              String
+  siteCoordinates      String
+  address              String
+  surveyDate           DateTime
+  rnpSiteLocation      Boolean
+  rnpHeight            Boolean
+  pb3InitialApproval   Boolean
+  pb3ProvideDocuments  Boolean
+  pb3FullAuthority     Boolean
+  pb3LeaseAmount       Boolean
+  ranSiteImplementation Boolean
+  ranHeight            Boolean
+  ranMwFeasibility     Boolean
+  ranPowerConnection   Boolean
+  ranPowerSource       Boolean
+  ranPowerCapacity     Boolean
+  ranPowerRoute        Boolean
+  ranAccess            Boolean
+  ranBuildingCondition Boolean
+  ranBuildingHeight    Boolean
+  ranSpace             Boolean
+  rnpName              String
+  rnpSign              String
+  rnpDate              DateTime
+  pb3Name              String
+  pb3Sign              String
+  pb3Date              DateTime
+  ranName              String
+  ranSign              String
+  ranDate              DateTime
+  comments             String
 }
