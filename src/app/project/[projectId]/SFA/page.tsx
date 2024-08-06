@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { db } from '../../../db'; // Adjust the path to your db
 
@@ -8,6 +8,7 @@ const SFAForm = () => {
   const { projectId } = useParams();
   const router = useRouter();
 
+  // Initialize form data with default values
   const [formData, setFormData] = useState({
     siteOwnerContact: '',
     siteId: '',
@@ -19,7 +20,6 @@ const SFAForm = () => {
     siteCoordinates: '',
     address: '',
     surveyDate: '',
-    // Table data
     siteSelectionApproval: [
       { team: 'RNP', responsibilities: [{ responsibility: 'Site Location', acceptance: '', name: '', sign: '', date: '', comments: '' }, { responsibility: 'Height', acceptance: '', name: '', sign: '', date: '', comments: '' }] },
       { team: 'PB3', responsibilities: [{ responsibility: 'Initial Landlord Approval', acceptance: '', name: '', sign: '', date: '', comments: '' }, { responsibility: 'Provide the required Documents', acceptance: '', name: '', sign: '', date: '', comments: '' }, { responsibility: 'Full authority', acceptance: '', name: '', sign: '', date: '', comments: '' }, { responsibility: 'Lease amount is acceptable', acceptance: '', name: '', sign: '', date: '', comments: '' }] },
@@ -27,6 +27,31 @@ const SFAForm = () => {
     ],
     remarks: '',
   });
+
+  useEffect(() => {
+    // Fetch existing data if any
+    const fetchData = async () => {
+      try {
+        const existingData = await db.sFAForm.findUnique({
+          where: { projectId: Number(projectId) }
+        });
+        if (existingData) {
+          const parsedApproval = JSON.parse(existingData.siteSelectionApproval);
+          setFormData({
+            ...existingData,
+            siteSelectionApproval: parsedApproval,
+            surveyDate: existingData.surveyDate ? new Date(existingData.surveyDate).toISOString().split('T')[0] : '',
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching form data:', error);
+      }
+    };
+
+    if (projectId) {
+      fetchData();
+    }
+  }, [projectId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -42,32 +67,36 @@ const SFAForm = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // Serialize the JSON data before saving
       const serializedApproval = JSON.stringify(formData.siteSelectionApproval);
 
-      // Save the form data to the database
-      await db.sFAForm.create({
-        data: {
+      await db.sFAForm.upsert({
+        where: { projectId: Number(projectId) },
+        update: {
+          ...formData,
+          surveyDate: formData.surveyDate ? new Date(formData.surveyDate) : null,
+          siteSelectionApproval: serializedApproval,
+        },
+        create: {
           ...formData,
           projectId: Number(projectId),
-          surveyDate: new Date(formData.surveyDate), // Ensure the surveyDate is saved as a Date object
-          siteSelectionApproval: serializedApproval, // Save serialized data
+          surveyDate: formData.surveyDate ? new Date(formData.surveyDate) : null,
+          siteSelectionApproval: serializedApproval,
         },
       });
       router.push(`/project/${projectId}`);
     } catch (error) {
       console.error('Error saving form data:', error);
     }
-  };  
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12">
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Site Feature Approval (SFA) Form</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSave}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label className="block text-gray-700">Site Owner & Contact No.</label>
@@ -77,7 +106,6 @@ const SFAForm = () => {
                 value={formData.siteOwnerContact}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -88,7 +116,6 @@ const SFAForm = () => {
                 value={formData.siteId}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -99,7 +126,6 @@ const SFAForm = () => {
                 value={formData.siteName}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -110,7 +136,6 @@ const SFAForm = () => {
                 value={formData.optionNo}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -121,7 +146,6 @@ const SFAForm = () => {
                 value={formData.siteLocation}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -132,7 +156,6 @@ const SFAForm = () => {
                 value={formData.siteType}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -143,7 +166,6 @@ const SFAForm = () => {
                 value={formData.traZone}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -154,7 +176,6 @@ const SFAForm = () => {
                 value={formData.siteCoordinates}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -165,7 +186,6 @@ const SFAForm = () => {
                 value={formData.address}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
             <div>
@@ -176,80 +196,77 @@ const SFAForm = () => {
                 value={formData.surveyDate}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                required
               />
             </div>
           </div>
 
+          {/* Table section */}
           <div className="mt-6">
             <label className="block text-gray-700">Site Selection Approval</label>
-            <table className="min-w-full bg-white border">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border">Teams</th>
-                  <th className="px-4 py-2 border">Responsibility</th>
-                  <th className="px-4 py-2 border">Acceptance (Yes or No)</th>
-                  <th className="px-4 py-2 border">Name</th>
-                  <th className="px-4 py-2 border">Sign</th>
-                  <th className="px-4 py-2 border">Date</th>
-                  <th className="px-4 py-2 border">Comments</th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.siteSelectionApproval.map((team, teamIndex) => (
-                  team.responsibilities.map((resp, respIndex) => (
-                    <tr key={`${teamIndex}-${respIndex}`}>
-                      {respIndex === 0 && (
-                        <td className="px-4 py-2 border" rowSpan={team.responsibilities.length}>
-                          {team.team}
-                        </td>
-                      )}
-                      <td className="px-4 py-2 border">{resp.responsibility}</td>
-                      <td className="px-4 py-2 border">
-                        <input
-                          type="text"
-                          value={resp.acceptance}
-                          onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'acceptance')}
-                          className="w-full border rounded px-2 py-1"
-                        />
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <input
-                          type="text"
-                          value={resp.name}
-                          onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'name')}
-                          className="w-full border rounded px-2 py-1"
-                        />
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <input
-                          type="text"
-                          value={resp.sign}
-                          onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'sign')}
-                          className="w-full border rounded px-2 py-1"
-                        />
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <input
-                          type="date"
-                          value={resp.date}
-                          onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'date')}
-                          className="w-full border rounded px-2 py-1"
-                        />
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <input
-                          type="text"
-                          value={resp.comments}
-                          onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'comments')}
-                          className="w-full border rounded px-2 py-1"
-                        />
-                      </td>
+            {formData.siteSelectionApproval.map((team, teamIndex) => (
+              <div key={team.team} className="mt-4">
+                <h3 className="text-xl font-semibold">{team.team}</h3>
+                <table className="w-full border-collapse mt-2">
+                  <thead>
+                    <tr>
+                      <th className="border border-gray-300 px-4 py-2">Responsibility</th>
+                      <th className="border border-gray-300 px-4 py-2">Acceptance</th>
+                      <th className="border border-gray-300 px-4 py-2">Name</th>
+                      <th className="border border-gray-300 px-4 py-2">Sign</th>
+                      <th className="border border-gray-300 px-4 py-2">Date</th>
+                      <th className="border border-gray-300 px-4 py-2">Comments</th>
                     </tr>
-                  ))
-                ))}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {team.responsibilities.map((resp, respIndex) => (
+                      <tr key={resp.responsibility}>
+                        <td className="border border-gray-300 px-4 py-2">{resp.responsibility}</td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <input
+                            type="text"
+                            value={resp.acceptance}
+                            onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'acceptance')}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                          />
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <input
+                            type="text"
+                            value={resp.name}
+                            onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'name')}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                          />
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <input
+                            type="text"
+                            value={resp.sign}
+                            onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'sign')}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                          />
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <input
+                            type="date"
+                            value={resp.date}
+                            onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'date')}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                          />
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          <input
+                            type="text"
+                            value={resp.comments}
+                            onChange={(e) => handleTableChange(e, teamIndex, respIndex, 'comments')}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
           </div>
 
           <div className="mt-6">
@@ -258,18 +275,19 @@ const SFAForm = () => {
               name="remarks"
               value={formData.remarks}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
               rows={4}
-              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             />
           </div>
 
-          <button
-            type="submit"
-            className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-          >
-            Submit
-          </button>
+          <div className="mt-6 flex justify-end">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Save
+            </button>
+          </div>
         </form>
       </div>
     </div>
