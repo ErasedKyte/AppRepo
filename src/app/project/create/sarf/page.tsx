@@ -33,12 +33,46 @@ export default function SarfFormCreatePage() {
     const requiredAntennaHeight4 = formData.get('RequiredAntennaHeight4') ? Number(formData.get('RequiredAntennaHeight4')) : null;
     const antennaAzimuth4 = formData.get('AntennaAzimuth4') ? Number(formData.get('AntennaAzimuth4')) : null;
 
+    // Log extracted form data
+    console.log("Form Data Extracted:");
+    console.log({
+      projectName,
+      nominalSiteId,
+      nominalSiteName,
+      roadName,
+      blockNumber,
+      longitude,
+      latitude,
+      searchRadius,
+      cellType,
+      noOfAntenna1,
+      antennaSize1,
+      requiredAntennaHeight1,
+      antennaAzimuth1,
+      noOfAntenna2,
+      antennaSize2,
+      requiredAntennaHeight2,
+      antennaAzimuth2,
+      noOfAntenna3,
+      antennaSize3,
+      requiredAntennaHeight3,
+      antennaAzimuth3,
+      noOfAntenna4,
+      antennaSize4,
+      requiredAntennaHeight4,
+      antennaAzimuth4
+    });
+
     // Create the project
     const newProject = await db.project.create({
       data: {
         name: projectName,
       },
     });
+
+    // Log the new project data
+    console.log("New Project Created:");
+    console.log(newProject);
 
     // Create the SARF form using the project ID
     const newSarfForm = await db.sarfForm.create({
@@ -72,6 +106,10 @@ export default function SarfFormCreatePage() {
       },
     });
 
+    // Log the new SARF form data
+    console.log("New SARF Form Created:");
+    console.log(newSarfForm);
+
     // Create the SFA form with null data using the same project ID
     const newSFAForm = await db.sFAForm.create({
       data: {
@@ -90,6 +128,10 @@ export default function SarfFormCreatePage() {
         remarks: '',
       },
     });
+
+    // Log the new SFA form data
+    console.log("New SFA Form Created:");
+    console.log(newSFAForm);
 
     redirect('/');
   }
@@ -159,7 +201,6 @@ export default function SarfFormCreatePage() {
               <label className="block font-semibold" htmlFor="Longitude">Longitude</label>
               <input
                 type="number"
-                step="any"
                 name="Longitude"
                 id="Longitude"
                 className="w-full border rounded p-2"
@@ -170,7 +211,6 @@ export default function SarfFormCreatePage() {
               <label className="block font-semibold" htmlFor="Latitude">Latitude</label>
               <input
                 type="number"
-                step="any"
                 name="Latitude"
                 id="Latitude"
                 className="w-full border rounded p-2"
@@ -178,7 +218,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="SearchRadius">Search Radius</label>
+              <label className="block font-semibold" htmlFor="SearchRadius">Search Radius (m)</label>
               <input
                 type="number"
                 name="SearchRadius"
@@ -201,12 +241,10 @@ export default function SarfFormCreatePage() {
         </div>
 
         <div className="border p-4 rounded-lg">
-          <h2 className="font-bold mb-2">Antenna Details</h2>
-          {/* Antenna 1 */}
-          <div className="border-b pb-4 mb-4">
-            <h3 className="font-bold mb-2">Antenna 1</h3>
+          <h2 className="font-bold mb-2">Section 2: Antenna Details</h2>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold" htmlFor="NoOfAntenna1">Number of Antennas</label>
+              <label className="block font-semibold" htmlFor="NoOfAntenna1">Number of Antennas in Sector 1</label>
               <input
                 type="number"
                 name="NoOfAntenna1"
@@ -216,7 +254,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaSize1">Antenna Size</label>
+              <label className="block font-semibold" htmlFor="AntennaSize1">Antenna Size in Sector 1</label>
               <input
                 type="text"
                 name="AntennaSize1"
@@ -226,7 +264,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="RequiredAntennaHeight1">Required Antenna Height</label>
+              <label className="block font-semibold" htmlFor="RequiredAntennaHeight1">Required Antenna Height in Sector 1 (m)</label>
               <input
                 type="number"
                 name="RequiredAntennaHeight1"
@@ -236,7 +274,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaAzimuth1">Antenna Azimuth</label>
+              <label className="block font-semibold" htmlFor="AntennaAzimuth1">Antenna Azimuth in Sector 1 (degrees)</label>
               <input
                 type="number"
                 name="AntennaAzimuth1"
@@ -246,11 +284,9 @@ export default function SarfFormCreatePage() {
               />
             </div>
           </div>
-          {/* Antenna 2 */}
-          <div className="border-b pb-4 mb-4">
-            <h3 className="font-bold mb-2">Antenna 2</h3>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold" htmlFor="NoOfAntenna2">Number of Antennas</label>
+              <label className="block font-semibold" htmlFor="NoOfAntenna2">Number of Antennas in Sector 2</label>
               <input
                 type="number"
                 name="NoOfAntenna2"
@@ -260,7 +296,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaSize2">Antenna Size</label>
+              <label className="block font-semibold" htmlFor="AntennaSize2">Antenna Size in Sector 2</label>
               <input
                 type="text"
                 name="AntennaSize2"
@@ -270,7 +306,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="RequiredAntennaHeight2">Required Antenna Height</label>
+              <label className="block font-semibold" htmlFor="RequiredAntennaHeight2">Required Antenna Height in Sector 2 (m)</label>
               <input
                 type="number"
                 name="RequiredAntennaHeight2"
@@ -280,7 +316,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaAzimuth2">Antenna Azimuth</label>
+              <label className="block font-semibold" htmlFor="AntennaAzimuth2">Antenna Azimuth in Sector 2 (degrees)</label>
               <input
                 type="number"
                 name="AntennaAzimuth2"
@@ -290,11 +326,9 @@ export default function SarfFormCreatePage() {
               />
             </div>
           </div>
-          {/* Antenna 3 */}
-          <div className="border-b pb-4 mb-4">
-            <h3 className="font-bold mb-2">Antenna 3</h3>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold" htmlFor="NoOfAntenna3">Number of Antennas</label>
+              <label className="block font-semibold" htmlFor="NoOfAntenna3">Number of Antennas in Sector 3</label>
               <input
                 type="number"
                 name="NoOfAntenna3"
@@ -304,7 +338,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaSize3">Antenna Size</label>
+              <label className="block font-semibold" htmlFor="AntennaSize3">Antenna Size in Sector 3</label>
               <input
                 type="text"
                 name="AntennaSize3"
@@ -314,7 +348,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="RequiredAntennaHeight3">Required Antenna Height</label>
+              <label className="block font-semibold" htmlFor="RequiredAntennaHeight3">Required Antenna Height in Sector 3 (m)</label>
               <input
                 type="number"
                 name="RequiredAntennaHeight3"
@@ -324,7 +358,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaAzimuth3">Antenna Azimuth</label>
+              <label className="block font-semibold" htmlFor="AntennaAzimuth3">Antenna Azimuth in Sector 3 (degrees)</label>
               <input
                 type="number"
                 name="AntennaAzimuth3"
@@ -334,11 +368,9 @@ export default function SarfFormCreatePage() {
               />
             </div>
           </div>
-          {/* Antenna 4 */}
-          <div className="border-b pb-4 mb-4">
-            <h3 className="font-bold mb-2">Antenna 4</h3>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold" htmlFor="NoOfAntenna4">Number of Antennas</label>
+              <label className="block font-semibold" htmlFor="NoOfAntenna4">Number of Antennas in Sector 4</label>
               <input
                 type="number"
                 name="NoOfAntenna4"
@@ -347,7 +379,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaSize4">Antenna Size</label>
+              <label className="block font-semibold" htmlFor="AntennaSize4">Antenna Size in Sector 4</label>
               <input
                 type="text"
                 name="AntennaSize4"
@@ -356,7 +388,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="RequiredAntennaHeight4">Required Antenna Height</label>
+              <label className="block font-semibold" htmlFor="RequiredAntennaHeight4">Required Antenna Height in Sector 4 (m)</label>
               <input
                 type="number"
                 name="RequiredAntennaHeight4"
@@ -365,7 +397,7 @@ export default function SarfFormCreatePage() {
               />
             </div>
             <div>
-              <label className="block font-semibold" htmlFor="AntennaAzimuth4">Antenna Azimuth</label>
+              <label className="block font-semibold" htmlFor="AntennaAzimuth4">Antenna Azimuth in Sector 4 (degrees)</label>
               <input
                 type="number"
                 name="AntennaAzimuth4"
@@ -376,14 +408,9 @@ export default function SarfFormCreatePage() {
           </div>
         </div>
 
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Save
-          </button>
-        </div>
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+          Create Sarf Form
+        </button>
       </form>
     </div>
   );
