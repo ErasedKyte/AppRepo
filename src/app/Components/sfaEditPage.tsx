@@ -24,8 +24,8 @@ interface SfaEditProps {
 }
 
 export default function SfaEditPage({ params, searchParams }: SfaEditProps) {
-    const [sfaForm, setSfaForm] = useState(null);
-    const [submittedData, setSubmittedData] = useState(null); // State to hold submitted form data
+    const [sfaForm, setSfaForm] = useState<any>(null);
+    const [submittedData, setSubmittedData] = useState<any>(null); // State to hold submitted form data
 
     useEffect(() => {
         async function fetchData() {
@@ -57,22 +57,20 @@ export default function SfaEditPage({ params, searchParams }: SfaEditProps) {
             siteCoordinates: formData.get('siteCoordinates') || sfaForm?.siteCoordinates,
             address: formData.get('address') || sfaForm?.address,
             surveyDate: surveyDate,
-            siteSelectionApproval: {
-                updateMany: (sfaForm?.siteSelectionApprovals || []).map((approval) => ({
-                    where: { id: approval.id },
-                    data: {
-                        team: formData.get(`team_${approval.id}`) || approval.team,
-                        responsibility: formData.get(`responsibility_${approval.id}`) || approval.responsibility,
-                        acceptance: formData.get(`acceptance_${approval.id}`) === 'on' || approval.acceptance,
-                        name: formData.get(`name_${approval.id}`) || approval.name,
-                        sign: formData.get(`sign_${approval.id}`) || approval.sign,
-                        date: formData.get(`date_${approval.id}`) ? new Date(formData.get(`date_${approval.id}`) as string).toISOString() : approval.date,
-                        comments: formData.get(`comments_${approval.id}`) || approval.comments
-                    }
-                })),
-                deleteMany: { id: { in: (sfaForm?.siteSelectionApprovals || []).map(a => a.id) } }
-            },
-            remarks: formData.get('remarks') || sfaForm?.remarks
+            remarks: formData.get('remarks') || sfaForm?.remarks,
+            siteSelectionApprovals: {
+                deleteMany: {}, // Clear existing approvals
+                create: (sfaForm?.siteSelectionApprovals || []).map((approval) => ({
+                    id: approval.id,
+                    team: formData.get(`team_${approval.id}`) || approval.team,
+                    responsibility: formData.get(`responsibility_${approval.id}`) || approval.responsibility,
+                    acceptance: formData.get(`acceptance_${approval.id}`) === 'on' || approval.acceptance,
+                    name: formData.get(`name_${approval.id}`) || approval.name,
+                    sign: formData.get(`sign_${approval.id}`) || approval.sign,
+                    date: formData.get(`date_${approval.id}`) ? new Date(formData.get(`date_${approval.id}`) as string).toISOString() : approval.date,
+                    comments: formData.get(`comments_${approval.id}`) || approval.comments
+                }))
+            }
         };
 
         try {
@@ -102,8 +100,8 @@ function SFAForm({ sfaForm, handleSubmit, submittedData }) {
             siteCoordinates,
             address,
             surveyDate,
-            siteSelectionApprovals,
-            remarks
+            remarks,
+            siteSelectionApprovals
         } = submittedData || sfaForm; // Display submittedData if available, otherwise sfaForm
 
         return (
@@ -166,7 +164,7 @@ function SFAForm({ sfaForm, handleSubmit, submittedData }) {
                         <label className="block text-gray-700 font-medium mb-1">Survey Date</label>
                         <input
                             name="surveyDate"
-                            defaultValue={sfaForm?.surveyDate.toISOString().split('T')[0]}
+                            defaultValue={sfaForm?.surveyDate?.toISOString().split('T')[0]}
                             type="date"
                             className="w-full px-4 py-2 border border-gray-300 rounded-md"
                         />
@@ -191,9 +189,8 @@ function SFAForm({ sfaForm, handleSubmit, submittedData }) {
                                 name={`acceptance_${approval.id}`}
                                 type="checkbox"
                                 defaultChecked={approval.acceptance}
-                                className="mr-2 leading-tight"
+                                className="mr-2"
                             />
-                            <label className="inline text-gray-700">Accepted</label>
                             <label className="block text-gray-700 font-medium mt-4 mb-1">Name</label>
                             <input
                                 name={`name_${approval.id}`}
@@ -209,8 +206,8 @@ function SFAForm({ sfaForm, handleSubmit, submittedData }) {
                             <label className="block text-gray-700 font-medium mt-4 mb-1">Date</label>
                             <input
                                 name={`date_${approval.id}`}
-                                type="date"
                                 defaultValue={new Date(approval.date).toISOString().split('T')[0]}
+                                type="date"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md"
                             />
                             <label className="block text-gray-700 font-medium mt-4 mb-1">Comments</label>
@@ -221,15 +218,15 @@ function SFAForm({ sfaForm, handleSubmit, submittedData }) {
                             />
                         </div>
                     ))}
+                    <button
+                        type="submit"
+                        className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
+                    >
+                        Submit
+                    </button>
                 </div>
-                <button
-                    type="submit"
-                    className="mt-6 px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600"
-                >
-                    Submit
-                </button>
             </form>
-            <div className="mt-8">{renderFormData()}</div>
+            {renderFormData()}
         </div>
     );
 }

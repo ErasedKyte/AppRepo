@@ -76,8 +76,8 @@ model Survey {
 }
 
 model SFAForm {
-  id                    Int      @id @default(autoincrement())
-  projectId             Int      @unique
+  id                    Int                     @id @default(autoincrement())
+  projectId             Int                     @unique
   siteOwnerContact      String
   siteId                String
   siteName              String
@@ -88,7 +88,20 @@ model SFAForm {
   siteCoordinates       String
   address               String
   surveyDate            DateTime
-  siteSelectionApproval String
+  siteSelectionApproval SiteSelectionApproval[]
   remarks               String
-  project               Project  @relation("ProjectSFAForm", fields: [projectId], references: [id])
+  project               Project                 @relation("ProjectSFAForm", fields: [projectId], references: [id])
+}
+
+model SiteSelectionApproval {
+  id             Int      @id @default(autoincrement())
+  team           String
+  responsibility String
+  acceptance     Boolean
+  name           String
+  sign           String
+  date           DateTime
+  comments       String
+  sfaFormId      Int
+  sfaForm        SFAForm  @relation(fields: [sfaFormId], references: [id])
 }
